@@ -1,0 +1,180 @@
+body
+{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+h1
+{
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+#auth-box
+{
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+}
+
+#mqtt-user
+{
+    padding: 8px;
+    margin: 5px;
+}
+
+#mqtt-pass
+{
+    padding: 8px;
+    margin: 5px;
+}
+
+#login-btn
+{
+    margin-top: 10px;
+    padding: 10px 25px;
+}
+
+.time #clock-display
+{
+    font-weight: bold;
+    color: #2980B9;
+}
+
+.grid-contener
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+
+
+.card
+{
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.card:hover
+{
+    transform: translateY(-5px);
+}
+
+.card h3
+{
+    margin-top: 0;
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.card p
+{
+    font-size: 2rem;
+    font-weight: bold;
+    color: #27ae60;
+    margin: 10px 0 0 0;
+}
+
+.card .small-text
+{
+    font-size: 1.2rem;
+    color: #2980b9;
+}
+
+.card table
+{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.card table h4
+{
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.card table input
+{
+    width: 110px;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.card button
+{
+    padding: 8px 15px;
+    font-size: 1rem;
+}
+
+.wide-card
+{
+    grid-column: span 2;
+}
+
+@media (max-width: 768px) 
+{
+    .wide-card
+    {
+        grid-column: span 1;
+    }    
+}
+
+#input-time-1, #input-time-2
+{
+    padding: 5px;
+    font-size: 1.1rem;
+}
+
+#save-time-btn
+{
+    padding: 8px 15px;
+    font-size: 1rem;
+}
+
+.status-bar
+{
+    margin-top: 30px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.status-bar p
+{
+    color: #7f8c8d;
+    font-weight: bold;
+}
+
+button
+{
+    margin-top: 30px;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(39, 174, 96, 0,3);
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+button:hover
+{
+    background-color: #219653;
+}
+
+button:active
+{
+    transform: scale(0.98);
+}

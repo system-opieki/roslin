@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System nawdninia</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+</head>
+<body>
+    <h1>Stan Twoich roślin</h1>
+
+    <div id="log-box" class="card">
+        <h3>Logowanie HiveMQ</h3>
+        <input type="text" id="mqtt-user" placeholder="Login HiveMQ">
+        <br>
+        <input type="password" id="mqtt-pass" placeholder="Hasło HiveMQ">
+        <br>
+        <button id="login-btn">Połacz</button>
+    </div>
+
+    <div class="time">
+        <p>Aktualny czas: <span id="clock-display">--:--:--</span></p>
+    </div>
+
+   <div class="grid-contener">
+        <div class="card">
+            <h3>Temperatura</h3>
+            <p><span id="val-temp">--</span> °C</p>
+        </div>
+        <div class="card">
+            <h3>Wilgotność</h3>
+            <p><span id="val-hum">--</span> %</p>
+        </div>
+        <div class="card">
+            <h3>Ilość wody</h3>
+            <p><span id="val-tank">--</span> %</p>
+        </div>
+
+        
+        <div class="card wide-card">
+            <h3>Wilgotność gleby</h3>
+            <table>
+                <tr>
+                    <td><p class="small-text"><span id="name-m1">Roślina 1</span>: <span id="val-m1">--</span> %</p></td>
+                    <td><h4>Ustawienia</h4></td>
+                    <td>
+                        <input type="text" id="input-name-m1" placeholder="Nazwa rośliny">
+                        <input type="number" id="input-target-m1" placeholder="Wilgotność">
+                    </td>
+                </tr>
+                <tr>
+                    <td><p class="small-text"><span id="name-m2">Roślina 2</span>: <span id="val-m2">--</span> %</p></td>
+                    <td><h4>Ustawienia</h4></td>
+                    <td>
+                        <input type="text" id="input-name-m2" placeholder="Nazwa rośliny">
+                        <input type="number" id="input-target-m2" placeholder="Wilgotność">
+                    </td>
+                </tr>
+                <tr>
+                    <td><p class="small-text"><span id="name-m3">Roślina 3</span>: <span id="val-m3">--</span> %</p></td>
+                    <td><h4>Ustawienia</h4></td> 
+                    <td>
+                        <input type="text" id="input-name-m3" placeholder="Nazwa rośliny">
+                        <input type="number" id="input-target-m3" placeholder="Wilgotność">
+                    </td>
+                </tr>
+            </table>
+            <button id="save-m1-btn">Zapisz zmiany</button>
+        </div>
+
+        
+        <div class="card">
+            <h3>Godziny podlewań</h3>
+            <p class="small-text">Trigger 1:</p>
+            <input type="time" id="input-time-1" value="09:00">
+
+            <p class="small-text">Trigger 2:</p>
+            <input type="time" id="input-time-2" value="21:00">
+            <br>
+            <button id="save-time-btn">Zapisz godziny</button>
+        </div>
+    </div> 
+
+       
+
+        
+
+    <div class="status-bar">
+        <p>Ilość wykonanych podlewań: <span id="val-cnt">--</span></p>
+        <p>Status połączenia: <span id="val-status">Oczekiwanie na pomiar</span></p>
+    </div>
+
+
+    <button id="trigger-btn">Odświż pomiary</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
