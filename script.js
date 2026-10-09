@@ -47,7 +47,7 @@
 
         client.on('error', (err) => {
             console.error("Bład MQTT", err);
-            statusEl.innerText = "Błąd logawania / połączenia z chmurą";
+            statusEl.innerText = "Zły login lub hasło do logowania z MQTT";
             statusEl.style.color = "red";
             document.getElementById('log-box').style.display = 'block';
         });
