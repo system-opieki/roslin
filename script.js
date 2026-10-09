@@ -50,6 +50,7 @@
             statusEl.innerText = "Zły login lub hasło do logowania z MQTT";
             statusEl.style.color = "red";
             document.getElementById('log-box').style.display = 'block';
+            alert("Zły login lub hasło do logowania z MQTT");
         });
 
         client.on('message', (topic, message) => {
