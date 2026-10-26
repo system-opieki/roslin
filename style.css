@@ -111,6 +111,11 @@ h1
     margin-bottom: 5px;
 }
 
+.card table input[type="text"]
+{
+    width: 130px;
+}
+
 .card button
 {
     padding: 8px 15px;

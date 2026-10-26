@@ -8,19 +8,19 @@
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 </head>
 <body>
-    <h1>Stan Twoich roślin</h1>
+    <h1>Opiekun Roślin</h1>
 
     <div id="log-box" class="card">
-        <h3>Logowanie HiveMQ</h3>
-        <input type="text" id="mqtt-user" placeholder="Login HiveMQ">
+        <h3>Logowanie do Brokera</h3>
+        <input type="text" id="mqtt-user" placeholder="Login">
         <br>
-        <input type="password" id="mqtt-pass" placeholder="Hasło HiveMQ">
+        <input type="password" id="mqtt-pass" placeholder="Hasło">
         <br>
         <button id="login-btn">Połacz</button>
     </div>
 
     <div class="time">
-        <p>Aktualny czas: <span id="clock-display">--:--:--</span></p>
+        <p><span id="clock-display">--:--:--</span></p>
     </div>
 
    <div class="grid-contener">
@@ -39,21 +39,22 @@
 
         
         <div class="card wide-card">
-            <h3>Wilgotność gleby</h3>
+            <h3>Rośliny</h3>
             <table>
                 <tr>
                     <td><p class="small-text"><span id="name-m1">Roślina 1</span>: <span id="val-m1">--</span> %</p></td>
                     <td><h4>Ustawienia</h4></td>
                     <td>
-                        <input type="text" id="input-name-m1" placeholder="Nazwa rośliny">
+                        <input type="text" id="input-name-m1" list="plant-list" placeholder="Nazwa rośliny" autocomplete="off">
                         <input type="number" id="input-target-m1" placeholder="Wilgotność">
+                        
                     </td>
                 </tr>
                 <tr>
                     <td><p class="small-text"><span id="name-m2">Roślina 2</span>: <span id="val-m2">--</span> %</p></td>
                     <td><h4>Ustawienia</h4></td>
                     <td>
-                        <input type="text" id="input-name-m2" placeholder="Nazwa rośliny">
+                        <input type="text" id="input-name-m2" list="plant-list" placeholder="Nazwa rośliny" autocomplete="off">
                         <input type="number" id="input-target-m2" placeholder="Wilgotność">
                     </td>
                 </tr>
@@ -61,17 +62,26 @@
                     <td><p class="small-text"><span id="name-m3">Roślina 3</span>: <span id="val-m3">--</span> %</p></td>
                     <td><h4>Ustawienia</h4></td> 
                     <td>
-                        <input type="text" id="input-name-m3" placeholder="Nazwa rośliny">
+                        <input type="text" id="input-name-m3" list="plant-list" placeholder="Nazwa rośliny" autocomplete="off">
                         <input type="number" id="input-target-m3" placeholder="Wilgotność">
                     </td>
                 </tr>
             </table>
             <button id="save-m1-btn">Zapisz zmiany</button>
+
+            <!--definicja listy-->
+            <datalist id="plant-list">
+                <option value="Skrzydłokwiat" data-moisture="60"></option>
+                <option value="Zamiokulkas" data-moisture="40"></option>
+                <option value="Paproć" data-moisture="70"></option>
+                <option value="Monstera" data-moisture="50"></option>
+                <option value="Kaktus" data-moisture="20"></option>
+            </datalist>
         </div>
 
         
         <div class="card">
-            <h3>Godziny podlewań</h3>
+            <h3>Godziny sprawdzania kondycji roślin</h3>
             <p class="small-text">Trigger 1:</p>
             <input type="time" id="input-time-1" value="09:00">
 
@@ -87,8 +97,8 @@
         
 
     <div class="status-bar">
-        <p>Ilość wykonanych podlewań: <span id="val-cnt">--</span></p>
-        <p>Status połączenia: <span id="val-status">Oczekiwanie na pomiar</span></p>
+        <p>Podlano: <br><span id="val-cnt">--</span></p>
+        <p>Status połączenia: <br><span id="val-status">Oczekiwanie na pomiar</span></p>
     </div>
 
 

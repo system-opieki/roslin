@@ -1,7 +1,7 @@
     let t1_h = 9, t1_m = 0;
     let t2_h = 21, t2_m = 15;
     
-    const HIVEMQ_CLUSTER_URL = "b76a09857f72483694dc6bdb9e2d4469.s1.eu.hivemq.cloud";
+    const MQTT_CLUSTER_URL = "e1befaaf.ala.eu-central-1.emqxsl.com";
     
     const TOPIC_DATA        = "rosliny/pomiary";
     const TOPIC_CONFIG      = "rosliny/konfiguracja";
@@ -19,14 +19,14 @@
     }, 1000);
 
 
-    //laczenie z HiveMQ (WebSockets)
-    function connectToHiveMQ(username, password)
+    //laczenie z Brokerem (WebSockets)
+    function connectToMQTT(username, password)
     {
         const statusEl = document.getElementById('val-status');
-        statusEl.innerText = "Łączenie z HiveMQ...";
+        statusEl.innerText = "Łączenie z Brokerem...";
         statusEl.style.color = "orange";
 
-        const brokerUrl = `wss://${HIVEMQ_CLUSTER_URL}:8884/mqtt`;
+        const brokerUrl = `wss://${MQTT_CLUSTER_URL}:8084/mqtt`;
 
         client = mqtt.connect(brokerUrl, {
             username: username,
@@ -35,9 +35,9 @@
         });
 
         client.on('connect', () => {
-            console.log("Połoczono z HiveMQ");
-            localStorage.setItem('hivemq_user', username);
-            localStorage.setItem('hivemq_pass', password);
+            console.log("Połoczono z Brokerem");
+            localStorage.setItem('broker_user', username);
+            localStorage.setItem('broker_pass', password);
 
             document.getElementById('log-box').style.display = 'none';
             statusEl.style.color = "green";
@@ -47,10 +47,9 @@
 
         client.on('error', (err) => {
             console.error("Bład MQTT", err);
-            statusEl.innerText = "Zły login lub hasło do logowania z MQTT";
+            statusEl.innerText = "Brak połączenia z chmurą!";
             statusEl.style.color = "red";
             document.getElementById('log-box').style.display = 'block';
-            alert("Zły login lub hasło do logowania z MQTT");
         });
 
         client.on('message', (topic, message) => {
@@ -102,24 +101,26 @@
             document.getElementById('name-m2').innerText = data.n2;
             document.getElementById('name-m3').innerText = data.n3;
 
-            document.getElementById('input-target-m1').value = data.t1;
-            document.getElementById('input-target-m2').value = data.t2;
-            document.getElementById('input-target-m3').value = data.t3;
+            //wilgotnosc pusta
+            document.getElementById('input-target-m1').value = (data.t1 === 0) ? "" : data.t1;
+            document.getElementById('input-target-m2').value = (data.t2 === 0) ? "" : data.t2;
+            document.getElementById('input-target-m3').value = (data.t3 === 0) ? "" : data.t3;
 
-            document.getElementById('input-name-m1').value = data.n1;
-            document.getElementById('input-name-m2').value = data.n2;
-            document.getElementById('input-name-m3').value = data.n3;
+            //nazwa rosliny pusta
+            document.getElementById('input-name-m1').value = (data.n1 === "Roślina 1") ? "" : data.n1;
+            document.getElementById('input-name-m2').value = (data.n2 === "Roślina 2") ? "" : data.n2;
+            document.getElementById('input-name-m3').value = (data.n3 === "Roślina 3") ? "" : data.n3;
             }
         });
     }
     
 
     //altomatyczne logowanie gdy dane zapisane
-    const savedUser = localStorage.getItem('hivemq_user');
-    const savedPass = localStorage.getItem('hivemq_pass');
+    const savedUser = localStorage.getItem('broker_user');
+    const savedPass = localStorage.getItem('broker_pass');
     if(savedUser && savedPass)
     {
-        connectToHiveMQ(savedUser, savedPass);
+        connectToMQTT(savedUser, savedPass);
     }
 
 
@@ -129,7 +130,7 @@
         const p = document.getElementById('mqtt-pass').value.trim();
         if(u && p)
         {
-            connectToHiveMQ(u, p);
+            connectToMQTT(u, p);
         }
     });
             
@@ -174,19 +175,29 @@
         const name3 = document.getElementById('input-name-m3').value.trim();
         const target3 = document.getElementById('input-target-m3').value;
 
+        //gdy pole nazwy puste
+        const n1_send = name1 !== "" ? name1 : "Roślina 1";
+        const n2_send = name2 !== "" ? name2 : "Roślina 2";
+        const n3_send = name3 !== "" ? name3 : "Roślina 3";
+
+        //gdy wilgotnosc pusta
+        const t1_send = target1 !== "" ? parseInt(target1) : 0;
+        const t2_send = target2 !== "" ? parseInt(target2) : 0;
+        const t3_send = target3 !== "" ? parseInt(target3) : 0;
+
         //zpieranie danych do wyslania 
         let parms = [];
-        if(target1 !== "") parms.push(`m1=${parseInt(target1)}`);
-        if(target2 !== "") parms.push(`m2=${parseInt(target2)}`);
-        if(target3 !== "") parms.push(`m3=${parseInt(target3)}`);
-        if(name1 !== "") parms.push(`n1=${name1}`);
-        if(name2 !== "") parms.push(`n2=${name2}`);
-        if(name3 !== "") parms.push(`n3=${name3}`);
+        parms.push(`m1=${t1_send}`);
+        parms.push(`m2=${t2_send}`);
+        parms.push(`m3=${t3_send}`);
+        parms.push(`n1=${n1_send}`);
+        parms.push(`n2=${n2_send}`);
+        parms.push(`n3=${n3_send}`);
 
         //zmianna nazwy
-        if(name1 !== "") document.getElementById('name-m1').innerText = name1;
-        if(name2 !== "") document.getElementById('name-m2').innerText = name2;
-        if(name3 !== "") document.getElementById('name-m3').innerText = name3;
+        if(name1 !== "") document.getElementById('name-m1').innerText = n1_send;
+        if(name2 !== "") document.getElementById('name-m2').innerText = n2_send;
+        if(name3 !== "") document.getElementById('name-m3').innerText = n3_send;
         
         if(parms.length > 0)
         {
@@ -194,6 +205,38 @@
             alert("Ustawino nowe progi wilgotności");
         }
     });
+
+
+
+    //obsluga listy kwiatow
+    function setupDatalistSync(nameInputId, targetInputId, datalistId)
+    {
+        const nameInput = document.getElementById(nameInputId);
+        const targetInput  = document.getElementById(targetInputId);
+        const datalist = document.getElementById(datalistId);
+
+        nameInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+
+            const option = Array.from(datalist.options).find(opt => opt.value === val);
+
+            //dopasowanie wilgotnosci gdy znajdzamy nazwe na liscie 
+            if(option)
+            {
+                const moisture = option.getAttribute('data-moisture');
+                if(moisture)
+                {
+                    targetInput.value = moisture;
+                }
+            }
+        });
+    }
+
+    //nasluchiwanie na to wpisujemy
+    setupDatalistSync('input-name-m1', 'input-target-m1', 'plant-list');
+    setupDatalistSync('input-name-m2', 'input-target-m2', 'plant-list');
+    setupDatalistSync('input-name-m3', 'input-target-m3', 'plant-list');
+
 
 
     //przycisk "odswież pomiary"
