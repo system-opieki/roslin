@@ -83,6 +83,11 @@
                 document.getElementById('val-m2').innerText = data.m2.toFixed(2);
                 document.getElementById('val-m3').innerText = data.m3.toFixed(2);
                 document.getElementById('val-cnt').innerText = data.cnt;
+
+                const now = new Date();
+                const tiemString = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit', second: '2-digit'});
+                document.getElementById('last-update').innerText = tiemString;
+                
             }
 
             //odebranie konfiguracji z esp
