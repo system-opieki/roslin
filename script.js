@@ -11,6 +11,7 @@
 
     let client = null;
     let checkConnectionOnNextMsg = false;
+    let isEspOnline = false;
 
     //zegar
     setInterval(() => {
@@ -42,7 +43,9 @@
             document.getElementById('log-box').style.display = 'none';
             statusEl.style.color = "green";
 
-            client.subscribe([TOPIC_DATA, TOPIC_CONFIG]);
+            //client.subscribe([TOPIC_DATA, TOPIC_CONFIG]);
+            client.subscribe([TOPIC_DATA, TOPIC_CONFIG, "rosliny/status"]);
+
         });
 
         client.on('error', (err) => {
@@ -65,7 +68,7 @@
                 {
                     if(data.conn === 1)
                     {
-                        statusEl.innerText = "Poprawna komunikacja UART";
+                        statusEl.innerText = "Poprawna komunikacja";
                         statusEl.style.color = "green";
                     }else
                     {
@@ -84,10 +87,14 @@
                 document.getElementById('val-m3').innerText = data.m3.toFixed(2);
                 document.getElementById('val-cnt').innerText = data.cnt;
 
-                const now = new Date();
-                const tiemString = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit', second: '2-digit'});
-                document.getElementById('last-update').innerText = tiemString;
-                
+                const lastUpdateEL = document.getElementById('last-update');
+                if(lastUpdateEL && data.ts)
+                {
+                    //mnozymy przez 1000 aby zamienic milisekundy
+                    const now = new Date(data.ts * 1000);
+                    const tiemString = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit', second: '2-digit'});
+                    document.getElementById('last-update').innerText = tiemString;
+                }
             }
 
             //odebranie konfiguracji z esp
@@ -115,6 +122,22 @@
             document.getElementById('input-name-m1').value = (data.n1 === "Roślina 1") ? "" : data.n1;
             document.getElementById('input-name-m2').value = (data.n2 === "Roślina 2") ? "" : data.n2;
             document.getElementById('input-name-m3').value = (data.n3 === "Roślina 3") ? "" : data.n3;
+            }
+
+            if(topic === "rosliny/status")
+            {
+                const statusEl = document.getElementById('val-status');
+                if(payload === "offline")
+                {
+                    statusEl.innerText = "Układ odłączony od zasilania!"
+                    statusEl.style.color = "red";
+                    isEspOnline = false;
+                }else if(payload === "online")
+                {
+                    statusEl.innerText = "Stare dane, oczekiwanie na pomiar";
+                    statusEl.style.color ="orange";
+                    isEspOnline = true;
+                }
             }
         });
     }
@@ -245,16 +268,21 @@
 
 
     //przycisk "odswież pomiary"
-    document.getElementById('trigger-btn').addEventListener('click', () => {
-    if(!client || !client.connected) return alert("Brak połączenia z chmurą!");
+        document.getElementById('trigger-btn').addEventListener('click', () => {
+        if(!client || !client.connected) return alert("Brak połączenia z chmurą!");
 
-    const statusEl = document.getElementById('val-status');
-    statusEl.innerText = "Sprawdzanie...";
-    statusEl.style.color = "orange";
+        if(!isEspOnline) {
+            alert("Nie można odświeżyć pomiarów – układ jest wyłączony!");
+            return; // Przerywa wykonywanie, komenda nie zostanie wysłana
+        }
 
-    checkConnectionOnNextMsg = true;
-    client.publish(TOPIC_CMD_TRIG, "1");
-    });
+        const statusEl = document.getElementById('val-status');
+        statusEl.innerText = "Sprawdzanie...";
+        statusEl.style.color = "orange";
+
+        checkConnectionOnNextMsg = true;
+        client.publish(TOPIC_CMD_TRIG, "1");
+        });
 
     
 
